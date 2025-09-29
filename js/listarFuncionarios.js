@@ -1,5 +1,5 @@
 import { db } from "./firebaseConfig.js"
-import { getDocs, collection, doc, deleteDoc, setDoc} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+import { getDoc, getDocs, collection, doc, deleteDoc, setDoc} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
 
 async function buscarFuncionarios() {
@@ -61,6 +61,9 @@ async function excluirFuncionario(idFuncionario) {
     }
 }
 
+let edicao = null; // Definindo variável global
+
+
 async function lidarClique(eventoDeClique) {
     const btnExcluir = eventoDeClique.target.closest('.btn-Excluir')
     if(btnExcluir){
@@ -84,12 +87,12 @@ async function lidarClique(eventoDeClique) {
         const idFuncionario = btnEditar.dataset.id
         const funcionario = await buscarFuncionariosPorId(idFuncionario)
 
-        const edicao = getValoresEditar()
+        edicao = getValoresEditar()
 
-        edicao.editarNome.value=funcionario.nome
-        edicao.editarIdade.value=funcionario.idade
-        edicao.editarCargo.value=funcionario.cargo
-        editar.editarId.value=funcionario.id
+        edicao.editarNome.value = funcionario.nome
+        edicao.editarIdade.value = funcionario.idade
+        edicao.editarCargo.value = funcionario.cargo
+        edicao.editarId.value = funcionario.id
 
         edicao.formularioEdicao.style.display = 'block'
     }
@@ -100,14 +103,16 @@ function getValoresEditar() {
         editarNome: document.getElementById("editar-nome"),
         editarIdade: document.getElementById("editar-idade"),
         editarCargo: document.getElementById("editar-cargo"),
-        editarId: document.getElementById("editar-id")
+        editarId: document.getElementById("editar-id"),
+        formularioEdicao: document.getElementById("formulario-edicao")
+
     }
 }
 
 async function buscarFuncionariosPorId(id) {
     try{
         const funcionarioDoc = doc(db, "funcionarios", id)
-        const dadoAtual = await getDocs(funcionarioDoc)
+        const dadoAtual = await getDoc(funcionarioDoc)
 
         if (dadoAtual.exists()){
             return {id: dadoAtual.id, ...dadoAtual.data()}
@@ -128,7 +133,7 @@ document.getElementById("btnSalvarEdicao").addEventListener("click", async () =>
     const novoDados={
         nome: edicao.editarNome.value.trim(),
         idade: parseInt(edicao.editarIdade.value),
-        cargo: edicao.editarId.value.trim()
+        cargo: edicao.editarCargo.value.trim(),
     }
 
     try{
