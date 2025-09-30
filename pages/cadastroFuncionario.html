@@ -4,8 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastrar Funcionários</title>
+    <link rel="stylesheet" href="./../css/syle.css">
 </head>
 <body>
+
+    <div id="header-container"> </div>
+
     <div id="cadastro-container"> 
         <h2> Cadastrar Novos Funcionários</h2>
         
@@ -21,5 +25,14 @@
         <button id="btnEnviar"> Cadastrar </button>
     </div>
     <script type="module" src="./../js/cadastroFuncionario.js"></script>
+
+        <script> 
+        async function carregarHeader() {
+            const response = await fetch('./../componentes/header.html');
+            const headerHTML = await response.text();
+            document.getElementById('header-container').innerHTML = headerHTML;
+        }
+        carregarHeader();
+    </script> 
 </body>
 </html>
